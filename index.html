@@ -66,15 +66,32 @@
 
         const alertsDropdown = document.getElementById('alertsDropdown'); 
 
-        alertsDropdown.addEventListener('click', function(event) { 
+        /*alertsDropdown.addEventListener('click', function(event) { 
 
-        pendo.track("alertsDropdown", {
+         pendo.track("alertsDropdown", {
                     visitorId: visitorId,
                     accountId: accountId,
                     timestamp: Date.now(),
                     source: event.source,
                     country: event.location.country
             });
+        });
+        */
+        
+        pendo.track("TD Track Event", {
+        visitorId: "user_001",
+        accountId: "account_001",
+        role: "Sr TAM",
+        width: JSON.stringify(window.innerWidth),
+        height: JSON.stringify(window.innerHeight),
+        });
+        
+        pendo.track("Auto TD Track Event", {
+        visitorId: window.visitorId,
+        accountId: window.accountId,
+        role: window.role,
+        source: window.source,
+        location: window.location
         });
 
     </script>

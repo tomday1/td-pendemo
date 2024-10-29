@@ -60,6 +60,23 @@
                     }
                 });
         })('7bd1af5c-40f4-4a4b-6320-7e20f662c90d');
+
+        const visitorId = pendo.visitor.id;
+        const accountId = pendo.account.id;
+
+        const alertsDropdown = document.getElementById('alertsDropdown'); 
+
+        alertsDropdown.addEventListener('click', function(event) { 
+
+        pendo.track("alertsDropdown", {
+                    visitorId: visitorId,
+                    accountId: accountId,
+                    timestamp: Date.now(),
+                    source: event.source,
+                    country: event.location.country
+            });
+        });
+
     </script>
 </head>
 
@@ -86,7 +103,7 @@
             <li class="nav-item active">
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span>New Dashboard</span></a>
             </li>
 
             <!-- Divider -->

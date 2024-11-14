@@ -11,12 +11,12 @@
       // Please use Strings, Numbers, or Bools for value types.
       pendo.initialize({
           visitor: {
-              id:           'user_001',
-              email:        'tom.day@pendo.io',
-              full_name:    'Tom Day',
-              role:         'Sr TAM',
-              company:      'Pendo',
-              location:     'London, UK'
+            id:           sessionStorage.getItem('username'),
+            email:        sessionStorage.getItem('email'),
+            full_name:    sessionStorage.getItem('full_name'),
+            role:         sessionStorage.getItem('role'),
+            company:      sessionStorage.getItem('company'),
+            location:     sessionStorage.getItem('location')
 
               // You can add any additional visitor level key-values here,
               // as long as it's not one of the above reserved names.

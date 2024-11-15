@@ -16,7 +16,8 @@
             full_name:    sessionStorage.getItem('full_name'),
             role:         sessionStorage.getItem('role'),
             company:      sessionStorage.getItem('company'),
-            location:     sessionStorage.getItem('location')
+            location:     sessionStorage.getItem('location'),
+            localisation:     sessionStorage.getItem('localisation')
 
               // You can add any additional visitor level key-values here,
               // as long as it's not one of the above reserved names.

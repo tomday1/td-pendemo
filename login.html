@@ -43,7 +43,6 @@
     </div>
 
     <script>
-        // In your login.html's JavaScript
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -71,12 +70,15 @@
                 sessionStorage.setItem('role', foundUser.role);
                 sessionStorage.setItem('company', foundUser.company);
                 sessionStorage.setItem('location', foundUser.location);
+                sessionStorage.setItem('localisation', foundUser.location);
 
                 window.location.href = 'index.html';
             } else {
                 alert('Invalid username or password');
             }
         });
+        document.getElementById('username').value = 'tom';
+        document.getElementById('password').value = 'tom';
     </script>
 
 </body>

@@ -12,6 +12,8 @@ saveButton.addEventListener('click', function(event) {
   const status = formData.get('status'); 
 
   pendo.track("Deal Submitted", {
+    visitorId: window.visitorId,
+    accountId: window.accountId, 
     dealId: dealId,
     dealName: dealName,
     contact: contact,

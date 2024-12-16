@@ -112,7 +112,7 @@
             setTimeout(() => { // Simulate network delay
                 const foundUser = users.find(user => user.username === username && user.password === password);
 
-                loadingSpinner.style.display = 'none'; // Hide the spinner
+                loadingSpinner.style.display = 'none'; 
 
                 if (foundUser) {
                     sessionStorage.setItem('username', foundUser.username);
@@ -126,7 +126,7 @@
                 } else {
                     alert('Invalid Agent Code or Access Code');
                 }
-            }, 100); // Reduced delay to 1 second
+            }, 100);
         });
     </script>
 </body>

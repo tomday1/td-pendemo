@@ -29,7 +29,7 @@
 </head>
 
 <body id="page-top">
-
+    <script src="app.js" defer></script>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -470,57 +470,55 @@
                         </style>
                     </head>
                     <body>
+                        <div class="container">
+                            <div class="card" style="padding: 20px;">
+                                <h1>Deal Management</h1>
+                                <div>
+                                    <label for="dealId">Deal ID:</label>
+                                    <input type="text" id="dealId" required><br><br>
                     
-                        <h1>Deal Management</h1>
+                                    <label for="dealName">Deal Name:</label>
+                                    <input type="text" id="dealName" required><br><br>
                     
-                        <form id="dealForm">
-                            <label for="dealId">Deal ID:</label>
-                            <input type="text" id="dealId" name="dealId" required><br><br>
+                                    <label for="contact">Contact:</label>
+                                    <input type="text" id="contact" required><br><br>
                     
-                            <label for="dealName">Deal Name:</label>
-                            <input type="text" id="dealName" name="dealName" required><br><br>
+                                    <label for="date">Date:</label>
+                                    <input type="date" id="date" required><br><br>
                     
-                            <label for="contact">Contact:</label>
-                            <input type="text" id="contact" name="contact" required><br><br>
+                                    <label for="status">Status:</label>
+                                    <select id="status">
+                                        <option value="Draft">Draft</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="Complete">Complete</option>
+                                    </select><br><br>
                     
-                            <label for="date">Date:</label>
-                            <input type="date" id="date" name="date" required><br><br>
-                    
-                            <label for="status">Status:</label>
-                            <select id="status" name="status">
-                                <option value="Draft">Draft</option>
-                                <option value="In Progress">In Progress</option>
-                                <option value="Complete">Complete</option>
-                            </select><br><br>
-                    
-                            <button type="button" id="saveButton">Save / Next Stage</button>
-                        </form>
-                    
-                        <h2>Deals</h2>
-                        <table id="dealTable">
-                            <thead>
-                                <tr>
-                                    <th>Deal ID</th>
-                                    <th>Deal Name</th>
-                                    <th>Contact</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                                    <button type="button" id="saveButton">Save / Next Stage</button>
+                                </div>
+                                <h2>Deals</h2>
+                                <table id="dealTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Deal ID</th>
+                                            <th>Deal Name</th>
+                                            <th>Contact</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
                     
                         <script>
-                             // ... (JavaScript remains the same)
-                            const dealForm = document.getElementById('dealForm');
-                            const dealTable = document.getElementById('dealTable').getElementsByTagName('tbody')[0];
                             const saveButton = document.getElementById('saveButton');
+                            const dealTable = document.getElementById('dealTable').getElementsByTagName('tbody')[0];
                             let deals = JSON.parse(localStorage.getItem('deals')) || [];
                     
                             function renderTable() {
-                                dealTable.innerHTML = ''; // Clear the table
+                                dealTable.innerHTML = '';
                                 deals.forEach(deal => {
                                     let row = dealTable.insertRow();
                                     let cell1 = row.insertCell();
@@ -535,29 +533,27 @@
                                     cell2.textContent = deal.dealName;
                                     cell3.textContent = deal.contact;
                                     cell4.textContent = deal.date;
-                                    
+                    
                                     let statusCell = document.createElement('span');
                                     statusCell.textContent = deal.status;
-                                    statusCell.classList.add('status-' + deal.status.toLowerCase().replace(/\s+/g, '-')); // Dynamic class
+                                    statusCell.classList.add('status-' + deal.status.toLowerCase().replace(/\s+/g, '-'));
                                     cell5.appendChild(statusCell);
                     
                                     let editButton = document.createElement('button');
                                     editButton.textContent = 'Edit';
                                     editButton.addEventListener('click', () => editDeal(deal.dealId));
                                     cell6.appendChild(editButton);
-
+                    
                                     let deleteButton = document.createElement('button');
                                     deleteButton.textContent = 'Delete';
                                     deleteButton.classList.add('delete-button');
-
-                                    deleteButton.addEventListener('click', () => { // Use deal.dealId
+                                    deleteButton.addEventListener('click', () => {
                                         if (confirm("Are you sure you want to delete this deal?")) {
-                                            deals = deals.filter(d => d.dealId !== deal.dealId); // Filter deals array
+                                            deals = deals.filter(d => d.dealId !== deal.dealId);
                                             saveDeals();
                                             renderTable();
                                         }
                                     });
-
                                     cell6.appendChild(deleteButton);
                                 });
                             }
@@ -576,13 +572,7 @@
                                     document.getElementById('status').value = dealToEdit.status;
                                 }
                             }
-                            function deleteDeal(index) {
-                                if (confirm("Are you sure you want to delete this deal?")) {
-                                    deals.splice(index, 1); // Remove the deal from the array
-                                    saveDeals();
-                                    renderTable();
-                                }
-                            }
+                    
                             saveButton.addEventListener('click', () => {
                                 const dealId = document.getElementById('dealId').value;
                                 const dealName = document.getElementById('dealName').value;
@@ -590,29 +580,42 @@
                                 const date = document.getElementById('date').value;
                                 let status = document.getElementById('status').value;
                     
+                                alert(`Deal ID: ${dealId}\nDeal Name: ${dealName}\nContact: ${contact}\nDate: ${date}\nStatus: ${status}`);
+                    
                                 let existingDealIndex = deals.findIndex(deal => deal.dealId === dealId);
                                 if (existingDealIndex !== -1) {
-                                    if(deals[existingDealIndex].status === "Draft"){
+                                    if (deals[existingDealIndex].status === "Draft") {
                                         deals[existingDealIndex].status = "In Progress";
-                                    } else if (deals[existingDealIndex].status === "In Progress"){
+                                    } else if (deals[existingDealIndex].status === "In Progress") {
                                         deals[existingDealIndex].status = "Complete";
                                     }
                                     deals[existingDealIndex].dealName = dealName;
                                     deals[existingDealIndex].contact = contact;
                                     deals[existingDealIndex].date = date;
                                 } else {
-                                    const newDeal = { dealId, dealName, contact, date, status };
+                                    const newDeal = {
+                                        dealId,
+                                        dealName,
+                                        contact,
+                                        date,
+                                        status
+                                    };
                                     deals.push(newDeal);
                                 }
                                 saveDeals();
                                 renderTable();
-                                dealForm.reset();
+                                document.getElementById('dealId').value = "";
+                                document.getElementById('dealName').value = "";
+                                document.getElementById('contact').value = "";
+                                document.getElementById('date').value = "";
+                                document.getElementById('status').value = "Draft";
                             });
                     
-                            renderTable(); // Initial render
+                            renderTable();
                         </script>
-                    
                     </body>
+                    
+                    </html>
                     </html>
                     <!-- Page Heading -->
 

@@ -1,8 +1,8 @@
-const dealForm = document.getElementById('dealForm');
-const saveButton = document.getElementById('saveButton');
-
 saveButton.addEventListener('click', function(event) {
-  event.preventDefault(); 
+  // Prevent default form submission
+  event.preventDefault();
+
+  // Now you can safely display the alert
   const formData = new FormData(dealForm);
 
   const dealId = formData.get('dealId'); 
@@ -11,6 +11,9 @@ saveButton.addEventListener('click', function(event) {
   const date = formData.get('date');
   const status = formData.get('status'); 
 
+  alert(`Deal ID: ${dealId}\nDeal Name: ${dealName}\nContact: ${contact}\nDate: ${date}\nStatus: ${status}`);
+
+  // Your Pendo tracking code
   pendo.track("Deal Submitted", {
     visitorId: window.visitorId,
     accountId: window.accountId, 
@@ -20,5 +23,4 @@ saveButton.addEventListener('click', function(event) {
     date: date,
     status: status,
   });
-
 });

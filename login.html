@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>007 Access Point</title>
     <style>
-        @keyframes gunShot {
-            0% {transform: translate(-50%, -50%) scale(0.1); opacity: 1;}
-            30% {transform: translate(-50%, -50%) scale(1.2); opacity: 1;}
-            60%{transform: translate(-50%, -50%) scale(0.8); opacity: 1;}
-            100% {transform: translate(-50%, -50%) scale(10); opacity: 0;}
-        }
         body {
             background-color: black;
             color: white;
@@ -34,20 +28,6 @@
             overflow: hidden;
         }
 
-        .gun-barrel {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            background-image: url('https://i.stack.imgur.com/gLz9l.png'); /* Replace with your image */
-            background-size: contain;
-            background-repeat: no-repeat;
-            opacity: 0;
-            z-index: 1;
-        }
-
         .form-control {
             background-color: rgba(0, 0, 0, 0.3);
             border: none;
@@ -56,7 +36,7 @@
             padding: 10px;
             margin-bottom: 10px;
             width: 100%;
-            box-sizing: border-box; /* Include padding in width */
+            box-sizing: border-box;
         }
 
         .btn-primary {
@@ -67,24 +47,47 @@
             border-radius: 5px;
             cursor: pointer;
             width: 100%;
+            transition: background-color 0.3s ease;
         }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
         .h4 {
             text-align: center;
             margin-bottom: 20px;
         }
+
+        .loading-spinner {
+            display: none; /* Hidden by default */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-
     <div class="container">
         <div class="card">
-            <div class="gun-barrel" id="gunBarrel"></div>
             <h4 class="h4">00 Agent Access</h4>
             <form id="loginForm">
                 <input type="text" class="form-control" id="username" placeholder="Agent Code">
                 <input type="password" class="form-control" id="password" placeholder="Access Code">
                 <button type="submit" class="btn-primary">Initiate Mission</button>
-            </form>
+                <div class="loading-spinner" id="loadingSpinner"></div> </form>
         </div>
     </div>
 
@@ -92,29 +95,25 @@
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const gunBarrel = document.getElementById('gunBarrel');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            loadingSpinner.style.display = 'block'; // Show the spinner
 
-            // Force a reflow to restart the animation
-            gunBarrel.style.animation = 'none';
-            gunBarrel.offsetHeight; // Trigger reflow
-            gunBarrel.style.animation = 'gunShot 2s forwards';
-
-
-            setTimeout(() => {
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                const users = [
-                    { username: 'user_001', password: 'user_001', email: 'tom.day@pendo.io', full_name:'Tom Day',role: 'Sr TAM',company:'Pendo',location:'Epsom, UK', localisation: 'en_GB'},
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const users = [
+                { username: 'user_001', password: 'user_001', email: 'tom.day@pendo.io', full_name:'Tom Day',role: 'Sr TAM',company:'Pendo',location:'Epsom, UK', localisation: 'en_GB'},
                     { username: 'tom', password: 'tom', email: 'tom.day@pendo.io', full_name:'Tom Day',role: 'Sr TAM',company:'Pendo',location:'London, UK', localisation: 'en_GB'},
                     { username: '007', password: '007', email: 'james.bond@mi6.co.uk', full_name:'James Bond',role: 'Spy',company:'MI6',location:'Unknown', localisation: 'en_GB'},
                     { username: 'm', password: 'm', email: 'm@mi6.co.uk', full_name:'Missions',role: 'Head Spy',company:'MI6',location:'London, UK', localisation: 'en_GB'},
                     { username: 'q', password: 'q', email: 'q@mi6.co.uk', full_name:'Q Branch',role: 'Gadget Man',company:'MI6',location:'Unknown', localisation: 'en_GB'},
                     { username: 'le chiffre', password: 'le chiffre', email: 'lechiffre@spectre.fr', full_name:'Le Chiffre',role: 'Private Banker',company:'Spectre',location:'Stateless', localisation: 'fr'}
-                           
-                ];
-    
+            ];
+
+            setTimeout(() => { // Simulate network delay
                 const foundUser = users.find(user => user.username === username && user.password === password);
-    
+
+                loadingSpinner.style.display = 'none'; // Hide the spinner
+
                 if (foundUser) {
                     sessionStorage.setItem('username', foundUser.username);
                     sessionStorage.setItem('email', foundUser.email);
@@ -123,14 +122,12 @@
                     sessionStorage.setItem('company', foundUser.company);
                     sessionStorage.setItem('location', foundUser.location);
                     sessionStorage.setItem('localisation', foundUser.localisation);
-    
                     window.location.href = 'index.html';
                 } else {
                     alert('Invalid Agent Code or Access Code');
                 }
-            }, 2000);
+            }, 100); // Reduced delay to 1 second
         });
     </script>
-
 </body>
 </html>

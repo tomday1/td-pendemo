@@ -3,42 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="css/sb-admin-2.min.css" rel="stylesheet"> </head>
+    <title>007 Access Point</title>
+    <style>
+        @keyframes gunShot {
+            0% {transform: translate(-50%, -50%) scale(0.1); opacity: 1;}
+            30% {transform: translate(-50%, -50%) scale(1.2); opacity: 1;}
+            60%{transform: translate(-50%, -50%) scale(0.8); opacity: 1;}
+            100% {transform: translate(-50%, -50%) scale(10); opacity: 0;}
+        }
+        body {
+            background-color: black;
+            color: white;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .card {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gun-barrel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background-image: url('https://i.stack.imgur.com/gLz9l.png'); /* Replace with your image */
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .form-control {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box; /* Include padding in width */
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .h4 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
 <body>
 
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-lg-12 col-md-9">
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
-                                    </div>
-                                    <form class="user" id="loginForm">
-                                        <div class="form-group">
-                                            <input type="text" class="form-control form-control-user"
-                                                id="username" name="username" aria-describedby="emailHelp"
-                                                placeholder="Enter Username...">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" class="form-control form-control-user"
-                                                id="password" name="password" placeholder="Password">
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="card">
+            <div class="gun-barrel" id="gunBarrel"></div>
+            <h4 class="h4">00 Agent Access</h4>
+            <form id="loginForm">
+                <input type="text" class="form-control" id="username" placeholder="Agent Code">
+                <input type="password" class="form-control" id="password" placeholder="Access Code">
+                <button type="submit" class="btn-primary">Initiate Mission</button>
+            </form>
         </div>
     </div>
 
@@ -46,39 +92,44 @@
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const gunBarrel = document.getElementById('gunBarrel');
 
-            // User list (replace with your actual user data)
-            const users = [
-                { username: 'user_001', password: 'user_001', email: 'tom.day@pendo.io', full_name:'Tom Day',role: 'Sr TAM',company:'Pendo',location:'Epsom, UK', localisation: 'en_GB'},
-                { username: 'tom', password: 'tom', email: 'tom.day@pendo.io', full_name:'Tom Day',role: 'Sr TAM',company:'Pendo',location:'London, UK', localisation: 'en_GB'},
-                { username: '007', password: '007', email: 'james.bond@mi6.co.uk', full_name:'James Bond',role: 'Spy',company:'MI6',location:'Unknown', localisation: 'en_GB'},
-                { username: 'm', password: 'm', email: 'm@mi6.co.uk', full_name:'Missions',role: 'Head Spy',company:'MI6',location:'London, UK', localisation: 'en_GB'},
-                { username: 'q', password: 'q', email: 'q@mi6.co.uk', full_name:'Q Branch',role: 'Gadget Man',company:'MI6',location:'Unknown', localisation: 'en_GB'},
-                { username: 'le chiffre', password: 'le chiffre', email: 'lechiffre@spectre.fr', full_name:'Le Chiffre',role: 'Private Banker',company:'Spectre',localisation:'Stateless', localisation: 'fr'}
-                       
-            ];
+            // Force a reflow to restart the animation
+            gunBarrel.style.animation = 'none';
+            gunBarrel.offsetHeight; // Trigger reflow
+            gunBarrel.style.animation = 'gunShot 2s forwards';
 
-            // Find the user in the list
-            const foundUser = users.find(user => user.username === username && user.password === password);
 
-            if (foundUser) {
-                sessionStorage.setItem('username', foundUser.username);
-                sessionStorage.setItem('email', foundUser.email);
-                sessionStorage.setItem('full_name', foundUser.full_name);
-                sessionStorage.setItem('role', foundUser.role);
-                sessionStorage.setItem('company', foundUser.company);
-                sessionStorage.setItem('location', foundUser.location);
-                sessionStorage.setItem('localisation', foundUser.localisation);
-
-                window.location.href = 'index.html';
-            } else {
-                alert('Invalid username or password');
-            }
+            setTimeout(() => {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const users = [
+                    { username: 'user_001', password: 'user_001', email: 'tom.day@pendo.io', full_name:'Tom Day',role: 'Sr TAM',company:'Pendo',location:'Epsom, UK', localisation: 'en_GB'},
+                    { username: 'tom', password: 'tom', email: 'tom.day@pendo.io', full_name:'Tom Day',role: 'Sr TAM',company:'Pendo',location:'London, UK', localisation: 'en_GB'},
+                    { username: '007', password: '007', email: 'james.bond@mi6.co.uk', full_name:'James Bond',role: 'Spy',company:'MI6',location:'Unknown', localisation: 'en_GB'},
+                    { username: 'm', password: 'm', email: 'm@mi6.co.uk', full_name:'Missions',role: 'Head Spy',company:'MI6',location:'London, UK', localisation: 'en_GB'},
+                    { username: 'q', password: 'q', email: 'q@mi6.co.uk', full_name:'Q Branch',role: 'Gadget Man',company:'MI6',location:'Unknown', localisation: 'en_GB'},
+                    { username: 'le chiffre', password: 'le chiffre', email: 'lechiffre@spectre.fr', full_name:'Le Chiffre',role: 'Private Banker',company:'Spectre',location:'Stateless', localisation: 'fr'}
+                           
+                ];
+    
+                const foundUser = users.find(user => user.username === username && user.password === password);
+    
+                if (foundUser) {
+                    sessionStorage.setItem('username', foundUser.username);
+                    sessionStorage.setItem('email', foundUser.email);
+                    sessionStorage.setItem('full_name', foundUser.full_name);
+                    sessionStorage.setItem('role', foundUser.role);
+                    sessionStorage.setItem('company', foundUser.company);
+                    sessionStorage.setItem('location', foundUser.location);
+                    sessionStorage.setItem('localisation', foundUser.localisation);
+    
+                    window.location.href = 'index.html';
+                } else {
+                    alert('Invalid Agent Code or Access Code');
+                }
+            }, 2000);
         });
-        document.getElementById('username').value = 'tom';
-        document.getElementById('password').value = 'tom';
     </script>
 
 </body>

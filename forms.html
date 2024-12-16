@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deal Management</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4; /* Light gray background */
+            margin: 20px;
+        }
+
+        h1 {
+            color: #db0011; /* HSBC Red */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: calc(100% - 12px); /* Account for padding */
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #db0011; /* HSBC Red */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #b8000f; /* Darker red on hover */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden; /* Prevents border radius issues with table */
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            background-color: white;
+        }
+
+        th {
+            background-color: #db0011; /* HSBC Red */
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* Slightly off-white for even rows */
+        }
+        .actions-cell {
+            white-space: nowrap; /* Prevents buttons from wrapping */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Deal Management</h1>
+
+    <form id="dealForm">
+        <label for="dealId">Deal ID:</label>
+        <input type="text" id="dealId" name="dealId" required><br><br>
+
+        <label for="dealName">Deal Name:</label>
+        <input type="text" id="dealName" name="dealName" required><br><br>
+
+        <label for="contact">Contact:</label>
+        <input type="text" id="contact" name="contact" required><br><br>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required><br><br>
+
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="Draft">Draft</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Complete">Complete</option>
+        </select><br><br>
+
+        <button type="button" id="saveDealButton">Save / Next Stage</button>
+    </form>
+
+    <h2>Deals</h2>
+    <table id="dealTable">
+        <thead>
+            <tr>
+                <th>Deal ID</th>
+                <th>Deal Name</th>
+                <th>Contact</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+         // ... (JavaScript remains the same)
+        const dealForm = document.getElementById('dealForm');
+        const dealTable = document.getElementById('dealTable').getElementsByTagName('tbody')[0];
+        const saveButton = document.getElementById('saveButton');
+        let deals = JSON.parse(localStorage.getItem('deals')) || [];
+
+        function renderTable() {
+            dealTable.innerHTML = ''; // Clear the table
+            deals.forEach(deal => {
+                let row = dealTable.insertRow();
+                let cell1 = row.insertCell();
+                let cell2 = row.insertCell();
+                let cell3 = row.insertCell();
+                let cell4 = row.insertCell();
+                let cell5 = row.insertCell();
+                let cell6 = row.insertCell();
+                cell6.className = "actions-cell";
+
+                cell1.textContent = deal.dealId;
+                cell2.textContent = deal.dealName;
+                cell3.textContent = deal.contact;
+                cell4.textContent = deal.date;
+                cell5.textContent = deal.status;
+
+                let editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.addEventListener('click', () => editDeal(deal.dealId));
+                cell6.appendChild(editButton);
+            });
+        }
+
+        function saveDeals() {
+            localStorage.setItem('deals', JSON.stringify(deals));
+        }
+
+        function editDeal(dealId) {
+            const dealToEdit = deals.find(deal => deal.dealId === dealId);
+            if (dealToEdit) {
+                document.getElementById('dealId').value = dealToEdit.dealId;
+                document.getElementById('dealName').value = dealToEdit.dealName;
+                document.getElementById('contact').value = dealToEdit.contact;
+                document.getElementById('date').value = dealToEdit.date;
+                document.getElementById('status').value = dealToEdit.status;
+            }
+        }
+
+        saveButton.addEventListener('click', () => {
+            const dealId = document.getElementById('dealId').value;
+            const dealName = document.getElementById('dealName').value;
+            const contact = document.getElementById('contact').value;
+            const date = document.getElementById('date').value;
+            let status = document.getElementById('status').value;
+
+            let existingDealIndex = deals.findIndex(deal => deal.dealId === dealId);
+            if (existingDealIndex !== -1) {
+                if(deals[existingDealIndex].status === "Draft"){
+                    deals[existingDealIndex].status = "In Progress";
+                } else if (deals[existingDealIndex].status === "In Progress"){
+                    deals[existingDealIndex].status = "Complete";
+                }
+                deals[existingDealIndex].dealName = dealName;
+                deals[existingDealIndex].contact = contact;
+                deals[existingDealIndex].date = date;
+            } else {
+                const newDeal = { dealId, dealName, contact, date, status };
+                deals.push(newDeal);
+            }
+            saveDeals();
+            renderTable();
+            dealForm.reset();
+        });
+
+        renderTable(); // Initial render
+    </script>
+
+</body>
+</html>

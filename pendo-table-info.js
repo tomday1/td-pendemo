@@ -1,6 +1,5 @@
 const dataTable = document.getElementById('dataTable');
 
-
 dataTable.addEventListener('click', function(event) {
   const cell = event.target.closest('td');
 

@@ -1,3 +1,6 @@
+const dealForm = document.getElementById('dealForm'); // Get the form element
+const saveButton = document.getElementById('saveButton');
+
 saveButton.addEventListener('click', function(event) {
   // Prevent default form submission
   event.preventDefault();

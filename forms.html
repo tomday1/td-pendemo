@@ -495,6 +495,7 @@
                                     </select><br><br>
                     
                                     <button type="button" id="saveButton">Save / Next Stage</button>
+                                    <button type="button" id="completeDeal">Complete Deal</button>
                                 </div>
                                 </form>
                                 <h2>Deals</h2>
@@ -516,6 +517,7 @@
                     
                         <script>
                             const saveButton = document.getElementById('saveButton');
+                            const completeDealButton = document.getElementById('completeDeal'); 
                             const dealTable = document.getElementById('dealTable').getElementsByTagName('tbody')[0];
                             let deals = JSON.parse(localStorage.getItem('deals')) || [];
                     
@@ -612,7 +614,17 @@
                                 document.getElementById('date').value = "";
                                 document.getElementById('status').value = "Draft";
                             });
-                    
+
+                            completeDealButton.addEventListener('click', () => {
+                                const dealId = document.getElementById('dealId').value;
+
+                                const dealToUpdate = deals.find(deal => deal.dealId === dealId);
+                                if (dealToUpdate) {
+                                    dealToUpdate.status = 'Complete'; 
+                                    saveDeals();
+                                    renderTable();
+                                }
+                            });
                             renderTable();
                         </script>
                     </body>

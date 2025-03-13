@@ -1,13 +1,44 @@
-/* Performance Example */
+/* Performance Example with Page URL and Visitor ID */
 const observer = new PerformanceObserver((list) => {
     list.getEntries().forEach((entry) => {
-      if (entry.entryType === "navigation") {
-        const loadTime = entry.loadEventEnd - entry.loadEventStart;
-        const domCompleteTime = entry.domComplete - entry.startTime;
-        console.log("Page Load Time (loadEvent):", loadTime, "ms");
-        console.log("DOM Complete Time:", domCompleteTime, "ms");
-      }
+        if (entry.entryType === "navigation") {
+            const loadTime = entry.loadEventEnd - entry.loadEventStart;
+            const domCompleteTime = entry.domComplete - entry.startTime;
+            const pageUrl = window.location.href;
+            const visitorId = window.pendo && window.pendo.visitor && window.pendo.visitor.id ? window.pendo.visitor.id : null;
+
+            console.log("Page Load Time (loadEvent):", loadTime, "ms");
+            console.log("DOM Complete Time:", domCompleteTime, "ms");
+            console.log("Page URL:", pageUrl);
+            console.log("Visitor ID:", visitorId);
+
+            // sendPerformanceData({
+            //     loadTime: loadTime,
+            //     domCompleteTime: domCompleteTime,
+            //     pageUrl: pageUrl,
+            //     visitorId: visitorId
+            // });
+        }
     });
-  });
-  
-  observer.observe({ type: "navigation", buffered: true });
+});
+
+observer.observe({ type: "navigation", buffered: true });
+
+// Optional: Function to send performance data to a server
+// function sendPerformanceData(data) {
+//     fetch('/api/performance', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(data),
+//     })
+//     .then(response => {
+//         if (!response.ok) {
+//             console.error('Failed to send performance data.');
+//         }
+//     })
+//     .catch(error => {
+//         console.error('Error sending performance data:', error);
+//     });
+// }

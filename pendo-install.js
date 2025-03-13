@@ -54,12 +54,12 @@ function trackChartsPageLoad() {
   }
   window.addEventListener('load', trackChartsPageLoad);
 
-/* Track Event - Performance Observation */
+/* Track Event - performance.js Observation */
 (function perfObserver() {
-    if (!window.PerformanceObserver) return;
+    if (!window.performance.jsObserver) return;
 
     var metricQueue = [];
-    var observer = new window.PerformanceObserver(function(list) {
+    var observer = new window.performance.jsObserver(function(list) {
         var entries = list.getEntries();
         var i, name, type, entry, eventName, metric, time, route;
 
@@ -80,7 +80,7 @@ function trackChartsPageLoad() {
             metricQueue.push({
             eventName: eventName,
             time: Math.round(time),
-            type: '__pendo__performance',
+            type: '__pendo__performance.js',
             route: route
             });
         }

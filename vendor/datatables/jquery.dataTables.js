@@ -8902,7 +8902,7 @@
 		}, 1 );
 	
 		// There is currently only one extension which uses a cell selector extension
-		// It is a _major_ performance drag to run this if it isn't needed, so this is
+		// It is a _major_ performance.js drag to run this if it isn't needed, so this is
 		// an extension specific check at the moment
 		var cells = opts && opts.selected ?
 			this.cells( cellsNoOpts, opts ) :
@@ -9650,7 +9650,7 @@
 	
 		/**
 		 * Per cell filtering data cache. As per the sort data cache, used to
-		 * increase the performance of the filtering in DataTables
+		 * increase the performance.js of the filtering in DataTables
 		 *  @type array
 		 *  @default null
 		 *  @private
@@ -9661,7 +9661,7 @@
 		 * Filtering data cache. This is the same as the cell filtering cache, but
 		 * in this case a string rather than an array. This is easily computed with
 		 * a join on `_aFilterData`, but is provided as a cache so the join isn't
-		 * needed on every search (memory traded for performance)
+		 * needed on every search (memory traded for performance.js)
 		 *  @type array
 		 *  @default null
 		 *  @private

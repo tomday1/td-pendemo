@@ -2210,7 +2210,7 @@ var helpers = {
 	},
 
 	/**
-	 * Note(SB) for performance sake, this method should only be used when loopable type
+	 * Note(SB) for performance.js sake, this method should only be used when loopable type
 	 * is unknown or in none intensive code (not called often and small loopable). Else
 	 * it's preferable to use a regular for() loop and save extra function calls.
 	 * @param {object|Array} loopable - The object or array to be iterated.
@@ -7666,7 +7666,7 @@ function addResizeListener(node, listener, chart) {
 				// Because we are inside `throttled`, and currently `ticking`, scroll
 				// events are ignored during this whole 2 resize process.
 				// If we assumed wrong and something else happened, we are resizing
-				// twice in a frame (potential performance issue)
+				// twice in a frame (potential performance.js issue)
 				listener(createEvent('resize', chart));
 			}
 		}

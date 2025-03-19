@@ -1,22 +1,21 @@
-$(document).ready(function() {
-    function determinePageUrl() {
-        var activeTabId = $('.nav-tabs .nav-link.active').attr('href').substring(1); // Get the active tab ID
-        if (activeTabId) {
-            return 'https://tomday1.github.io/td-pendemo/charts-' + activeTabId;
-        } else {
-            return 'https://tomday1.github.io/td-pendemo/charts-area'; // Default URL
-        }
+pendo.location.setUrl('http://localhost:8000/charts-area');
+
+function updateUrl(tabId) {
+    var baseUrl = '';
+
+    if (window.location.hostname === 'localhost') {
+        baseUrl = 'http://localhost:8000/charts';
+    } else if (window.location.hostname === 'tomday1.github.io') {
+        baseUrl = 'https://tomday1.github.io/td-pendemo/charts';
+    } else {
+        baseUrl = 'http://localhost:8000/charts';
     }
 
-    // Initialize the URL on page load
-    pendo.location.setUrl(function() {
-        return determinePageUrl();
-    });
+    var url = tabId ? baseUrl + '-' + tabId : baseUrl + '-area';
+    console.log('Setting URL:', url);
+    pendo.location.setUrl(url);
+}
 
-    // Listen for tab click events
-    $('.nav-tabs .nav-link').on('click', function() {
-        pendo.location.setUrl(function() {
-            return determinePageUrl();
-        });
-    });
+$(function() {
+    updateUrl('area');
 });

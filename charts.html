@@ -23,6 +23,8 @@
     <!--Pendo Snippet-->
     <script src="pendo-install.js" defer> </script>
     <script src="performance.js" defer></script>
+    <script src="charts-tabs.js" defer></script>
+    
 </head>
 
 <body id="page-top">
@@ -368,13 +370,13 @@
 
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="area-tab" data-toggle="tab" href="#area" role="tab" aria-controls="area" aria-selected="true">Area Chart</a>
+                            <a class="nav-link active" id="area-tab" data-toggle="tab" href="#area" role="tab" aria-controls="area" aria-selected="true" onclick="updateUrl('area')">Area Chart</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="bar-tab" data-toggle="tab" href="#bar" role="tab" aria-controls="bar" aria-selected="false">Bar Chart</a>
+                            <a class="nav-link" id="bar-tab" data-toggle="tab" href="#bar" role="tab" aria-controls="bar" aria-selected="false" onclick="updateUrl('bar')">Bar Chart</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="donut-tab" data-toggle="tab" href="#donut" role="tab" aria-controls="donut" aria-selected="false">Donut Chart</a>
+                            <a class="nav-link" id="donut-tab" data-toggle="tab" href="#donut" role="tab" aria-controls="donut" aria-selected="false" onclick="updateUrl('donut')">Donut Chart</a>
                         </li>
                     </ul>
                 

@@ -1,46 +1,67 @@
-/* Performance Example with Page URL and Visitor ID */
-document.addEventListener('pendoReady', () => {
-    const observer = new PerformanceObserver((list) => {
-        list.getEntries().forEach((entry) => {
-            if (entry.entryType === "navigation") {
-                const loadTimeMs = entry.loadEventEnd - entry.loadEventStart;
-                const domCompleteTimeMs = entry.domComplete - entry.startTime;
+function pageLoadTime() {
+    
+    if (typeof pendo !== 'undefined' && typeof pendo.isReady === 'function' && pendo.isReady()) {
+        console.log("Pendo is ready. Proceeding with performance data recording.");
 
-                const loadTimeS = loadTimeMs / 1000;
-                const domCompleteTimeS = domCompleteTimeMs / 1000;
+        if (window.performance && window.performance.getEntriesByType) {
+            const navigationEntries = performance.getEntriesByType('navigation');
 
+            if (navigationEntries && navigationEntries.length > 0) {
+                const loadTimeMs = navigationEntries[0].loadEventEnd - navigationEntries[0].startTime;
+                const loadTimeSec = loadTimeMs / 1000;
                 const pageUrl = window.location.href;
-                //Check pendo readiness inside the loop.
-                const visitorId = window.pendo && window.pendo.visitor && window.pendo.visitor.id ? window.pendo.visitor.id : null;
+                
+                const metadata = pendo.getSerializedMetadata();
 
-                console.log("Page Load Time (ms):", loadTimeMs, "ms");
-                console.log("Page Load Time (s):", loadTimeS.toFixed(2), "s");
-                console.log("DOM Complete Time (ms):", domCompleteTimeMs, "ms");
-                console.log("DOM Complete Time (s):", domCompleteTimeS.toFixed(2), "s");
-                console.log("Page URL:", pageUrl);
-                console.log("Visitor ID:", visitorId);
+                let visitorId = 'Pendo visitor ID not found'; // Default value
+                let location = 'Location not found'; // Default value
+
+                try {
+                    
+                    if (metadata && metadata.visitor && metadata.visitor.id) {
+                        visitorId = metadata.visitor.id;
+                    }
+                } catch (error) {
+                    console.error("Error getting Pendo visitor ID:", error);
+                }
+
+                try {
+                    
+                    if (metadata && metadata.visitor && metadata.visitor.location) {
+                        location = metadata.visitor.location;
+                    }
+                } catch (error) {
+                    console.error("Error getting Location:", error);
+                }
+
+                console.log("Page Load Time Data:");
+                
+                console.log("  Pendo Visitor ID:", visitorId);
+                console.log("  Location", location);
+                console.log("  Load Time:", loadTimeSec, "seconds");
+                console.log("  Page URL:", pageUrl);
+                // Send this data to your server or analytics tool.
+
+                pendo.track("Page Performance", {
+                    visitorId: visitorId,
+                    location: location,
+                    loadTimeSec: loadTimeSec,
+                    pageURL: pageUrl
+                  });
+
+            } else {
+                console.log("Navigation timing data not available.");
             }
-        });
-    });
+        } else {
+            console.log("Performance navigation API not supported.");
+        }
+    } else {
+        console.log("Pendo is not ready yet. Retrying performance data recording...");
+        setTimeout(pageLoadTime, 200); // Retry after a delay
+    }
+}
 
-    observer.observe({ type: "navigation", buffered: true });
+// Start the process when the page finishes loading
+window.addEventListener('load', function() {
+    pageLoadTime();
 });
-
-// Optional: Function to send performance data to a server
-// function sendPerformanceData(data) {
-//     fetch('/api/performance', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(data),
-//     })
-//     .then(response => {
-//         if (!response.ok) {
-//             console.error('Failed to send performance data.');
-//         }
-//     })
-//     .catch(error => {
-//         console.error('Error sending performance data:', error);
-//     });
-// }

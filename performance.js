@@ -42,9 +42,7 @@ function pageLoadTime() {
                 console.log("  Page URL:", pageUrl);
                 // Send this data to your server or analytics tool.
 
-                pendo.track("Page Performance", {
-                    visitorId: visitorId,
-                    location: location,
+                pendo.track("Page Load Performance", {
                     loadTimeSec: loadTimeSec,
                     pageURL: pageUrl
                   });

@@ -35,8 +35,11 @@
   
                 // You can add any additional account level key-values here,
                 // as long as it's not one of the above reserved names.
-            }
-        });
+            },
+            guides: {
+                disabled: false
+            },
+    });
   })('7bd1af5c-40f4-4a4b-6320-7e20f662c90d');
 
 

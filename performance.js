@@ -1,5 +1,4 @@
 function pageLoadTime() {
-    
     if (typeof pendo !== 'undefined' && typeof pendo.isReady === 'function' && pendo.isReady()) {
         console.log("Pendo is ready. Proceeding with performance data recording.");
 
@@ -7,17 +6,21 @@ function pageLoadTime() {
             const navigationEntries = performance.getEntriesByType('navigation');
 
             if (navigationEntries && navigationEntries.length > 0) {
-                const loadTimeMs = navigationEntries[0].loadEventEnd - navigationEntries[0].startTime;
-                const loadTimeSec = loadTimeMs / 1000;
+                const navigationEntry = navigationEntries[0];
+
+                const startTime = navigationEntry.startTime;
+                const domContentLoadedTime = navigationEntry.domContentLoadedEventEnd - startTime;
+                const loadTime = navigationEntry.loadEventEnd - startTime;
+                const responseTime = navigationEntry.responseEnd - startTime;
+
                 const pageUrl = window.location.href;
-                
+
                 const metadata = pendo.getSerializedMetadata();
 
-                let visitorId = 'Pendo visitor ID not found'; // Default value
-                let location = 'Location not found'; // Default value
+                let visitorId = 'Pendo visitor ID not found';
+                let location = 'Location not found';
 
                 try {
-                    
                     if (metadata && metadata.visitor && metadata.visitor.id) {
                         visitorId = metadata.visitor.id;
                     }
@@ -26,7 +29,6 @@ function pageLoadTime() {
                 }
 
                 try {
-                    
                     if (metadata && metadata.visitor && metadata.visitor.location) {
                         location = metadata.visitor.location;
                     }
@@ -35,17 +37,23 @@ function pageLoadTime() {
                 }
 
                 console.log("Page Load Time Data:");
-                
+
                 console.log("  Pendo Visitor ID:", visitorId);
-                console.log("  Location", location);
-                console.log("  Load Time:", loadTimeSec, "seconds");
+                console.log("  Location:", location);
+                console.log("  Start Time:", startTime, "ms");
+                console.log("  DOMContentLoaded Time:", domContentLoadedTime, "ms");
+                console.log("  Load Time:", loadTime, "ms");
+                console.log("  Response Time:", responseTime, "ms");
                 console.log("  Page URL:", pageUrl);
-                // Send this data to your server or analytics tool.
 
                 pendo.track("Page Load Performance", {
-                    loadTimeSec: loadTimeSec,
+                    visitorId: visitorId,
+                    location: location,
+                    loadTimeSec: loadTime / 1000, // Convert to seconds
+                    domContentLoadedTimeSec: domContentLoadedTime / 1000,
+                    responseTimeSec: responseTime / 1000,
                     pageURL: pageUrl
-                  });
+                });
 
             } else {
                 console.log("Navigation timing data not available.");
@@ -55,7 +63,7 @@ function pageLoadTime() {
         }
     } else {
         console.log("Pendo is not ready yet. Retrying performance data recording...");
-        setTimeout(pageLoadTime, 200); // Retry after a delay
+        setTimeout(pageLoadTime, 200);
     }
 }
 

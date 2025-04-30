@@ -72,31 +72,25 @@ function pageLoadTimeDetailed() {
                     console.log(`| ${paddedResourceName} | ${durationSec} | ${fullRequestURL} |`);
 
                     // Track each resource as a separate Pendo event
-                    if (visitorId === "tom") {
-                        pendo.track("Resource Load Time", {
-                            visitorId: visitorId,
-                            location: location,
-                            pageURL: pageUrl,
-                            resourceName: entry.name, // Use the full URL for consistency in Pendo
-                            durationSec: entry.duration / 1000
-                        });
-                    }
+                    pendo.track("Resource Load Time", {
+                        visitorId: visitorId,
+                        location: location,
+                        pageURL: pageUrl,
+                        resourceName: entry.name, // Use the full URL for consistency in Pendo
+                        durationSec: entry.duration / 1000
+                    });
                 });
 
                 // Track the overall page load performance once
-                if (visitorId === "tom") {
                     pendo.track("Page Load Performance Summary", {
                         visitorId: visitorId,
                         location: location,
-                        loadTimeSec: loadTime,
-                        domContentLoadedTimeSec: domContentLoadedTime,
-                        responseTimeSec: responseTime,
-                        finishTimeSec: finishTime,
+                        loadTimeSec: loadTime / 1000,
+                        domContentLoadedTimeSec: domContentLoadedTime / 1000,
+                        responseTimeSec: responseTime / 1000,
+                        finishTimeSec: finishTime / 1000,
                         pageURL: pageUrl
                     });
-                } else {
-                    console.log("Pendo track event skipped: visitorId is not 'tom'.");
-                }
 
             } else {
                 console.log("Navigation timing data not available.");
@@ -110,13 +104,7 @@ function pageLoadTimeDetailed() {
     }
 }
 
+// Start the process when the page finishes loading
 window.addEventListener('load', function() {
-    console.log("Page and all resources have finished loading.");
-
-    if (typeof pendo !== 'undefined' && typeof pendo.isReady === 'function' && pendo.isReady()) {
-        console.log("Pendo is ready. Proceeding with performance data recording.");
         pageLoadTimeDetailed();
-    } else {
-        console.log("Pendo is not ready yet, even after page load. Performance data might not be tracked.");
-    }
 });

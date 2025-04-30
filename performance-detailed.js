@@ -46,43 +46,44 @@ function pageLoadTimeDetailed() {
                 console.log("  Finish Time:", finishTime.toFixed(2), "secs");
                 console.log("  Page URL:", pageUrl);
 
-                const filteredResources = resourceEntries.filter(entry => entry.initiatorType === 'script' || entry.initiatorType === 'link');
-                const sortedResources = filteredResources.sort((a, b) => b.duration - a.duration);
+                // Check if the visitorId is 'tom' before proceeding with pendo.track
+                if (visitorId === 'tom') {
+                    const filteredResources = resourceEntries.filter(entry => entry.initiatorType === 'script' || entry.initiatorType === 'link');
+                    const sortedResources = filteredResources.sort((a, b) => b.duration - a.duration);
 
-                console.log("\nSlowest Script and Stylesheet Loading Times (First):");
-                const tableHeader = "| Resource Name                           | Duration (secs) | Full Request URL                                                |";
-                const separator = "|-----------------------------------------|-----------------|-----------------------------------------------------------------|";
-                console.log(tableHeader);
-                console.log(separator);
+                    console.log("\nSlowest Script and Stylesheet Loading Times (First):");
+                    const tableHeader = "| Resource Name                           | Duration (secs) | Full Request URL                                                |";
+                    const separator = "|-----------------------------------------|-----------------|-----------------------------------------------------------------|";
+                    console.log(tableHeader);
+                    console.log(separator);
 
-                sortedResources.forEach(entry => {
-                    let resourceName = '';
-                    const parts = entry.name.split('/');
-                    if (parts.length > 0) {
-                        resourceName = parts[parts.length - 1];
-                        if (resourceName === '') {
+                    sortedResources.forEach(entry => {
+                        let resourceName = '';
+                        const parts = entry.name.split('/');
+                        if (parts.length > 0) {
+                            resourceName = parts[parts.length - 1];
+                            if (resourceName === '') {
+                                resourceName = entry.name.substring(0, 40) + (entry.name.length > 40 ? '...' : '');
+                            }
+                        } else {
                             resourceName = entry.name.substring(0, 40) + (entry.name.length > 40 ? '...' : '');
                         }
-                    } else {
-                        resourceName = entry.name.substring(0, 40) + (entry.name.length > 40 ? '...' : '');
-                    }
-                    const paddedResourceName = resourceName.padEnd(40, ' ');
-                    const durationSec = (entry.duration / 1000).toFixed(2);
-                    const fullRequestURL = entry.name;
-                    console.log(`| ${paddedResourceName} | ${durationSec} | ${fullRequestURL} |`);
+                        const paddedResourceName = resourceName.padEnd(40, ' ');
+                        const durationSec = (entry.duration / 1000).toFixed(2);
+                        const fullRequestURL = entry.name;
+                        console.log(`| ${paddedResourceName} | ${durationSec} | ${fullRequestURL} |`);
 
-                    console.log("Visitor ID:", visitorId);
-                    // Track each resource as a separate Pendo event
-                    pendo.track("Resource Load Time", {
-                        visitorId: visitorId,
-                        location: location,
-                        pageURL: pageUrl,
-                        resourceName: entry.name, // Use the full URL for consistency in Pendo
-                        durationSec: entry.duration / 1000
+                        // Track each resource as a separate Pendo event
+                        pendo.track("Resource Load Time", {
+                            visitorId: visitorId,
+                            location: location,
+                            pageURL: pageUrl,
+                            resourceName: entry.name, // Use the full URL for consistency in Pendo
+                            durationSec: entry.duration / 1000
+                        });
                     });
-                });
 
-                // Track the overall page load performance once
+                    // Track the overall page load performance once
                     pendo.track("Page Load Performance Summary", {
                         visitorId: visitorId,
                         location: location,
@@ -92,6 +93,9 @@ function pageLoadTimeDetailed() {
                         finishTimeSec: finishTime / 1000,
                         pageURL: pageUrl
                     });
+                } else {
+                    console.log("Pendo tracking skipped for visitor ID:", visitorId);
+                }
 
             } else {
                 console.log("Navigation timing data not available.");

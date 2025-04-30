@@ -71,6 +71,7 @@ function pageLoadTimeDetailed() {
                     const fullRequestURL = entry.name;
                     console.log(`| ${paddedResourceName} | ${durationSec} | ${fullRequestURL} |`);
 
+                    console.log("Visitor ID:", visitorId);
                     // Track each resource as a separate Pendo event
                     pendo.track("Resource Load Time", {
                         visitorId: visitorId,
